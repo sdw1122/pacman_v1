@@ -7,6 +7,8 @@ import java.util.List;
 import java.util.Random;
 
 public class GameModel {
+	
+	
     // Game state
     private String playerName;
     private Position playerPosition;
@@ -21,6 +23,10 @@ public class GameModel {
     private boolean isGameOver;
     private boolean isGameClear;
     private final Random random;
+    //아이템 사용횟수
+    private int totalShield = 0;
+    private int totalFrozen = 0;
+	
 
     public GameModel() {
         this.playerName = "Player";
@@ -31,7 +37,7 @@ public class GameModel {
         this.random = new Random();
         initializeGame();
     }
-
+    
     public void initializeGame() {
         playerPosition = new Position(GameConstants.BOARD_SIZE / 2, GameConstants.BOARD_SIZE / 2);
         enemies.clear();
@@ -46,7 +52,10 @@ public class GameModel {
         isGameClear = false;
         initializeStage();
     }
-
+    
+    
+    
+    
     private void initializeStage() {
         initializeCoins();
         initializeEnemies();
@@ -147,9 +156,11 @@ public class GameModel {
             if (items.get(i).equals(playerPosition)) {
                 ItemType type = itemTypes.get(i);
                 if (type == ItemType.SHIELD) {
+                	totalShield++;//실드 총카운트
                     shieldCount++;
                     System.out.println("Shield acquired! Count: " + shieldCount);
                 } else {
+                	totalFrozen++;//프로즌 총카운트
                     timeCount = GameConstants.FREEZE_TIME;
                     System.out.println("Freeze activated! Duration: " + timeCount);
                 }
@@ -222,4 +233,13 @@ public class GameModel {
     public ItemType getItemType(int index) { return itemTypes.get(index); }
 
     public void resetGame() { initializeGame(); }
+    
+    //아이템 카운트 리턴
+    public int getTotalShield() {return totalShield;};
+    public int getTotalFrozen() {return totalFrozen;};
+    public void initializeItemCount() {
+    	totalShield = 0;
+    	totalFrozen = 0;
+    }
+    
 }

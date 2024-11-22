@@ -1,20 +1,26 @@
 package controller;
 
 import model.GameModel;
+import model.UserData;
 import model.Direction;
 import view.GameView;
 import javax.swing.*;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.util.ArrayList;
 
 public class GameController implements KeyListener {
     private final GameModel model;
     private final GameView view;
+    private final ArrayList<UserData> userList;
+    
+    
 
-    public GameController(GameModel model, GameView view) {
+    public GameController(GameModel model, GameView view, ArrayList<UserData> userList) {
         this.model = model;
         this.view = view;
-
+        this.userList = userList;
+        
         view.setModel(model);
         view.addKeyListener(this);
         view.setStartButtonListener(e -> startGame());
@@ -26,7 +32,7 @@ public class GameController implements KeyListener {
             JOptionPane.showMessageDialog(view, "Please enter a nickname!");
             return;
         }
-
+        
         model.setPlayerName(playerName);
         model.initializeGame();
         view.showGameScreen();
@@ -45,6 +51,12 @@ public class GameController implements KeyListener {
         if (direction != null) {
             model.movePlayer(direction);
             if (model.isGameOver()) {
+            	
+            	//유저정보저장
+            	
+            	addUserData(model.getPlayerName(), model.getScore(), model.getStage(), model.getTotalFrozen(), model.getTotalShield());
+            	model.initializeItemCount();
+            	
                 int option = JOptionPane.showConfirmDialog(
                         view,
                         "Game Over! Your score: " + model.getScore() + "\nDo you want to try again?",
@@ -60,7 +72,13 @@ public class GameController implements KeyListener {
             view.refresh();
         }
     }
-
+    //유저정보저장
+    public void addUserData(String name, int totalScore, int totalStage, int countFrozen, int countShield) {
+        UserData newUser = new UserData(name, totalScore, totalStage, countFrozen, countShield);
+        userList.add(newUser);
+    }
+    
+    
     @Override
     public void keyTyped(KeyEvent e) {}
 

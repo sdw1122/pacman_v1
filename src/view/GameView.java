@@ -1,33 +1,36 @@
 package view;
 
 import model.GameModel;
+import model.UserData;
 import view.panel.GamePanel;
 import view.panel.StartPanel;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyListener;
+import java.util.ArrayList;
 
 public class GameView extends JFrame {
     private final GamePanel gamePanel;
     private final StartPanel startPanel;
     private final CardLayout cardLayout;
     private final JPanel mainPanel;
-
-    public GameView() {
+    
+    public GameView(ArrayList<UserData> userList) {
+    	
         setTitle("PacMan Game");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setResizable(false);
 
         cardLayout = new CardLayout();
         mainPanel = new JPanel(cardLayout);
-
+        
         gamePanel = new GamePanel();
-        startPanel = new StartPanel();
-
+        startPanel = new StartPanel(userList);
+        
         mainPanel.add(startPanel, "Start");
         mainPanel.add(gamePanel, "Game");
-
+        
         add(mainPanel);
         pack();
         setLocationRelativeTo(null);
